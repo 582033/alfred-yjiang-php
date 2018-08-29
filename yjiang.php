@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set('PRC');
+
 use Alfred\Workflows\Workflow;
 
 require 'vendor/autoload.php';
