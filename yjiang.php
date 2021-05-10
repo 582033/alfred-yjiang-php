@@ -1,9 +1,9 @@
 <?php
-date_default_timezone_set('PRC');
-
-use Alfred\Workflows\Workflow;
-
 require 'vendor/autoload.php';
+require 'libs/Apater.php';
+
+use libs\Apater;
+use Alfred\Workflows\Workflow;
 
 class yjiang {
 
@@ -11,24 +11,25 @@ class yjiang {
         $this->workflow = new Workflow;
     }
 
-    public function timestamp($input){
-        if( is_numeric($input) ){
-            $output = date('Y-m-d H:i:s', $input);
-        }
-        else{
-            if( $input == 'now' ){
-                $input = date('Y-m-d H:i:s', time());
+    private function _piper($input){
+        $regexArr = [
+            '/\d+/' => 'timestamp',
+            '/\d{4}-\d{1,2}-\d{1,2}/' => 'timestamp',
+            '/now/' => 'timestamp',
+            '/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/' => 'ip',
+        ];
+        $output = "未匹配的数据类型";
+        foreach($regexArr as $regex => $action){
+            if( preg_match($regex, $input) ){
+                $Apater = new Apater();
+                $output = call_user_func([$Apater, $action], $input);
             }
-            $output = strtotime($input);
         }
-        if( $output <= 0 ){
-            $output = '请检查您输入的时间格式是否正确';
-        }
-        $this->_output($output, $input);
-        $this->workflow->result()->copy($output);
+        return $output;
     }
 
-    private function _output($output, $input){
+    public function run($input){
+        $output = $this->_piper($input);
         $this->workflow->result()
                     ->uid('com.alfred.yjiang')
                     ->title($output)
@@ -40,5 +41,6 @@ class yjiang {
                     ->copy($output);
 
         echo $this->workflow->output();
+        $this->workflow->result()->copy($output);
     }
 }
