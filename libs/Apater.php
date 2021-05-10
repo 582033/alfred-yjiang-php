@@ -9,7 +9,7 @@ class Apater {
         $ipRes = file_get_contents("http://ip-api.com/php/{$input}");
         $ipResArr = unserialize($ipRes);
         if( isset($ipResArr['status']) && $ipResArr['status'] == 'success' ){
-            $output = "IP:{$input} 所在地理位置: {$ipResArr['country']} {$ipResArr['regionName']} {$ipResArr['city']}";
+            $output = "IP:{$input} 地理位置: {$ipResArr['country']} {$ipResArr['regionName']} {$ipResArr['city']}";
         }
         return $output;
     }
