@@ -6,7 +6,7 @@ date_default_timezone_set('PRC');
 class Apater {
     public function ip($input){
         $output = "未获取到IP位置";
-        $ipRes = file_get_contents("http://ip-api.com/php/{$input}");
+        $ipRes = file_get_contents("http://ip-api.com/php/{$input}?lang=zh-CN");
         $ipResArr = unserialize($ipRes);
         if( isset($ipResArr['status']) && $ipResArr['status'] == 'success' ){
             $output = "IP:{$input} 地理位置: {$ipResArr['country']} {$ipResArr['regionName']} {$ipResArr['city']}";
